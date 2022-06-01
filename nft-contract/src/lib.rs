@@ -44,6 +44,9 @@ pub struct Contract {
     //keeps track of the token metadata for a given token ID
     pub token_metadata_by_id: UnorderedMap<TokenId, TokenMetadata>,
 
+    //keeps track of the token license for a given token ID
+    pub token_license_by_id: UnorderedMap<TokenId, TokenLicense>,
+
     //keeps track of the metadata for the contract
     pub metadata: LazyOption<NFTContractMetadata>,
 }
@@ -55,6 +58,7 @@ pub enum StorageKey {
     TokenPerOwnerInner { account_id_hash: CryptoHash },
     TokensById,
     TokenMetadataById,
+    TokenLicenseById,
     NFTContractMetadata,
     TokensPerType,
     TokensPerTypeInner { token_type_hash: CryptoHash },
@@ -75,8 +79,8 @@ impl Contract {
             owner_id,
             NFTContractMetadata {
                 spec: "nft-1.0.0".to_string(),
-                name: "NFT Tutorial Contract".to_string(),
-                symbol: "GOTEAM".to_string(),
+                name: "NFTSentry Contract 0.0.1".to_string(),
+                symbol: "SENTRY".to_string(),
                 icon: None,
                 base_uri: None,
                 reference: None,
@@ -99,6 +103,9 @@ impl Contract {
             tokens_by_id: LookupMap::new(StorageKey::TokensById.try_to_vec().unwrap()),
             token_metadata_by_id: UnorderedMap::new(
                 StorageKey::TokenMetadataById.try_to_vec().unwrap(),
+            ),
+            token_license_by_id: UnorderedMap::new(
+                StorageKey::TokenLicenseById.try_to_vec().unwrap(),
             ),
             //set the owner_id field equal to the passed in owner_id. 
             owner_id,
