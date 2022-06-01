@@ -80,11 +80,12 @@ impl Contract {
        //measure the initial storage being used on the contract
        let initial_storage_usage = env::storage_usage();
 
-       self.token_license_by_id.remove(&token_id);
-
+    
        //insert the token ID and license
-       self.token_license_by_id.insert(&token_id, &license);
-       //let lic = self.token_license_by_id.get(&token_id).unwrap();
+    //    let mut lic = self.token_license_by_id.get(&token_id).unwrap();
+    //    lic.test = 4;
+        self.token_license_by_id.remove(&token_id);
+        self.token_license_by_id.insert(&token_id, &license);
 
         // Construct the mint log as per the events standard.
         let nft_license_update_log: EventLog = EventLog {
