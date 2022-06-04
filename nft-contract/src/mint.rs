@@ -78,7 +78,7 @@ impl Contract {
     }
 
     #[payable]
-    pub fn nft_license_update(&mut self, token_id: TokenId, license: TokenLicense, receiver_id: AccountId){
+    pub fn nft_update_license(&mut self, token_id: TokenId, license: TokenLicense, receiver_id: AccountId){
        //measure the initial storage being used on the contract
        let initial_storage_usage = env::storage_usage();
 
@@ -90,9 +90,9 @@ impl Contract {
         // Construct the mint log as per the events standard.
         let nft_license_update_log: EventLog = EventLog {
             // Standard name ("nep171").
-            standard: NFT_STANDARD_NAME.to_string(),
+            standard: NFT_LICENSE_STANDARD_NAME.to_string(),
             // Version of the standard ("nft-1.0.0").
-            version: NFT_METADATA_SPEC.to_string(),
+            version: NFT_LICENSE_SPEC.to_string(),
             // The data related with the event stored in a vector.
             event: EventLogVariant::NftMint(vec![NftMintLog {
                 // Owner of the token.
@@ -116,7 +116,7 @@ impl Contract {
   }
 
     #[payable]
-    pub fn nft_license_proposed_update(&mut self, token_id: TokenId, receiver_id: AccountId){
+    pub fn nft_accept_license(&mut self, token_id: TokenId, receiver_id: AccountId){
        //measure the initial storage being used on the contract
        let initial_storage_usage = env::storage_usage();
 
@@ -131,9 +131,9 @@ impl Contract {
         // Construct the mint log as per the events standard.
         let nft_license_update_log: EventLog = EventLog {
             // Standard name ("nep171").
-            standard: NFT_STANDARD_NAME.to_string(),
+            standard: NFT_LICENSE_STANDARD_NAME.to_string(),
             // Version of the standard ("nft-1.0.0").
-            version: NFT_METADATA_SPEC.to_string(),
+            version: NFT_LICENSE_SPEC.to_string(),
             // The data related with the event stored in a vector.
             event: EventLogVariant::NftMint(vec![NftMintLog {
                 // Owner of the token.
@@ -159,19 +159,24 @@ impl Contract {
     #[payable]
     pub fn nft_propose_license(&mut self, token_id: TokenId, proposed_license: TokenLicense, receiver_id: AccountId){
        //measure the initial storage being used on the contract
-       let initial_storage_usage = env::storage_usage();
+    let initial_storage_usage = env::storage_usage();
 
-       // TODO: check if receiver_id and  proposed_license.issuer_id are the same entity
-
-        self.token_proposed_license_by_id.remove(&token_id);
-        self.token_proposed_license_by_id.insert(&token_id, &proposed_license);
+        // TODO: check if receiver_id and  proposed_license.issuer_id are the same entity
+        let master_id = env::predecessor_account_id();
+        if master_id == receiver_id {
+            self.token_proposed_license_by_id.remove(&token_id);
+            self.token_proposed_license_by_id.insert(&token_id, &proposed_license);
+        } else {
+            self.token_proposed_license_by_id.remove(&token_id);
+            self.token_proposed_license_by_id.insert(&token_id, &proposed_license);
+        }
 
         // Construct the mint log as per the events standard.
         let nft_propose_license_log: EventLog = EventLog {
             // Standard name ("nep171").
-            standard: NFT_STANDARD_NAME.to_string(),
+            standard: NFT_LICENSE_STANDARD_NAME.to_string(),
             // Version of the standard ("nft-1.0.0").
-            version: NFT_METADATA_SPEC.to_string(),
+            version: NFT_LICENSE_SPEC.to_string(),
             // The data related with the event stored in a vector.
             event: EventLogVariant::NftMint(vec![NftMintLog {
                 // Owner of the token.

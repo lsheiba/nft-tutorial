@@ -28,6 +28,10 @@ mod events;
 pub const NFT_METADATA_SPEC: &str = "nft-1.0.0";
 /// This is the name of the NFT standard we're using
 pub const NFT_STANDARD_NAME: &str = "nep171";
+/// This spec can be treated like a version of the standard.
+pub const NFT_LICENSE_SPEC: &str = "nftsentry-1.0.0";
+/// This is the name of the NFT standard we're using
+pub const NFT_LICENSE_STANDARD_NAME: &str = "nepXXX";
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]

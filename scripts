@@ -1,58 +1,5 @@
-near call $NFT_CONTRACT_ID nft_license_update '{ \
-        "token_id":"002",\
-        "license": '{\
-            "title":"NFTSentry License #1",\
-            "description":"First License Attempt",\
-            "issue_id":"'$CONTRACT_ID'",\
-            "uri":"https://bafybeihjuk544ww4e5qexjlrfyzdl6mkht6rk6cmbfvbosknvrjni364x4.ipfs.nftstorage.link",\
-            "metadata":'{\
-                "i_agree": "true",\
-                "perpetuity": "true",\
-                "exclusivity": "true",\
-                "personal_use": "true",\
-                "commercial_use": "false",\
-                "limited_display_sublicensee": "true",\
-                "template": "v1"\
-            }',\
-        }',\
-        "receiver_id": "'$NFT_CONTRACT_ID'"\
-    }' \
---accountId $NFT_CONTRACT_ID --amount 0.1
 
 
-near call $NFT_CONTRACT_ID nft_license_update '{ "token_id":"002","license": '{"title":"NFTSentry License #1","description":"First License Attempt","issue_id":"'$CONTRACT_ID'","uri":"https://bafybeihjuk544ww4e5qexjlrfyzdl6mkht6rk6cmbfvbosknvrjni364x4.ipfs.nftstorage.link","metadata":'{"i_agree": "true","perpetuity": "true","exclusivity": "true","personal_use": "true","commercial_use": "false","limited_display_sublicensee": "true","template": "v1"}',}',"receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-near call $NFT_CONTRACT_ID nft_license_update '{ "token_id":"002","license": '{""}',"receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-
-near call $NFT_CONTRACT_ID nft_license_update '{ "token_id":"002","license": '{"title":"NFTSentry License #1","description":"First License Attempt","issue_id":"'$CONTRACT_ID'","uri":"https://bafybeihjuk544ww4e5qexjlrfyzdl6mkht6rk6cmbfvbosknvrjni364x4.ipfs.nftstorage.link","metadata":'{""}',"issued_at":4}',"receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-
-near call $NFT_CONTRACT_ID nft_license_update '{"token_id":"002","license":'{"title":"NFTSentry License"}', "receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-near call $NFT_CONTRACT_ID nft_license_update '{"token_id":"002", "license": {"title":"NFTSentry License-3","description":"NFTSentry License","media":"https://bafybeihjuk544ww4e5qexjlrfyzdl6mkht6rk6cmbfvbosknvrjni364x4.ipfs.nftstorage.link"},"receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-near view \
-    $NFT_CONTRACT_ID nft_metadata
-
-near call $NFT_CONTRACT_ID nft_mint \
-    '{"token_id": "001", "metadata": '{""}', \
-    "license":'{""}', \
-    "receiver_id": "'$NFT_CONTRACT_ID'" }'
-    --accountId $NFT_CONTRACT_ID --amount 0.1
-    
-near call $NFT_CONTRACT_ID nft_mint { "token_id": "002", "metadata": {"title": "Demo Token #1", "description": "NFTSentry Demo Token #1", "media": "https://bafkreieuet5njw5flrjqwfohnoxyewqu3hrzwumadfuxuz4cyfmhv447pq.ipfs.nftstorage.link"}, "license":{"title":"NFTSentry License-1","description":"First NFTSentry License","media":"https://bafybeihjuk544ww4e5qexjlrfyzdl6mkht6rk6cmbfvbosknvrjni364x4.ipfs.nftstorage.link"}, "receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-
-near call $NFT_CONTRACT_ID nft_mint '{"token_id": "003", "metadata": {"title": "Demo Token #1", "description": "NFTSentry Demo Token #1", "media": "https://bafkreieuet5njw5flrjqwfohnoxyewqu3hrzwumadfuxuz4cyfmhv447pq.ipfs.nftstorage.link"}, "license": '{}', "receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-near call $NFT_CONTRACT_ID nft_mint '{"token_id": "004", "metadata": {"title": "Demo Token #1", "description": "NFTSentry Demo Token #1", "media": "https://bafkreieuet5njw5flrjqwfohnoxyewqu3hrzwumadfuxuz4cyfmhv447pq.ipfs.nftstorage.link"}, "license": {"title": "A", "description": "B"}, "receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-near call $NFT_CONTRACT_ID nft_mint '{"token_id": "003", "metadata": {"title": "Demo Token #1", "description": "NFTSentry Demo Token #1", "media": "https://bafkreieuet5njw5flrjqwfohnoxyewqu3hrzwumadfuxuz4cyfmhv447pq.ipfs.nftstorage.link"}, "license": {}, "receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
-near call $NFT_CONTRACT_ID nft_update_license '{"token_id": "004", "license": {}, "receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
-
----------------
 
 near view $NFT_CONTRACT_ID nft_tokens '{"from_index": "0", "limit": 50}'
 near view $NFT_CONTRACT_ID nft_token '{"token_id": "001"}'
@@ -80,3 +27,5 @@ near call $NFT_CONTRACT_ID nft_propose_license '{"token_id": "002", "proposed_li
 near call $NFT_CONTRACT_ID nft_transfer '{"receiver_id": "'$TEST1_CONTRACT_ACCOUNT'", "token_id": "001", "memo": "You are the owner of #001"}' --accountId $NFT_CONTRACT_ID --depositYocto 1
 
 near call $NFT_CONTRACT_ID nft_license_proposed_update '{"token_id":"001", "receiver_id": "'$TEST1_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --depositYocto 0.1
+
+near call $NFT_CONTRACT_ID nft_transfer '{"receiver_id": "'$NFTSENTRY_ID'", "token_id": "001", "memo": "You are the owner of #001"}' --accountId $NFT_CONTRACT_ID --depositYocto 1
