@@ -44,6 +44,8 @@ impl Contract {
         self.token_metadata_by_id.insert(&token_id, &metadata);
         //insert the token ID and license
         self.token_license_by_id.insert(&token_id, &license);
+        //insert the token ID and license
+        //self.token_proposed_license_by_id.insert(&token_id, &proposed_license);
 
         //call the internal method for adding the token to the owner
         self.internal_add_token_to_owner(&token.owner_id, &token_id);
@@ -80,13 +82,11 @@ impl Contract {
        //measure the initial storage being used on the contract
        let initial_storage_usage = env::storage_usage();
 
-    
-       //insert the token ID and license
-    //    let mut lic = self.token_license_by_id.get(&token_id).unwrap();
-    //    lic.test = 4;
+       // TODO: check if receiver_id and license.issuer_id are the same entity; if "YES" then update the license
+
         self.token_license_by_id.remove(&token_id);
         self.token_license_by_id.insert(&token_id, &license);
-
+    
         // Construct the mint log as per the events standard.
         let nft_license_update_log: EventLog = EventLog {
             // Standard name ("nep171").
@@ -108,9 +108,89 @@ impl Contract {
         env::log_str(&nft_license_update_log.to_string());
 
         //calculate the required storage which was the used - initial
-        let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
+        let storage_usage = env::storage_usage();
+        if storage_usage > initial_storage_usage {
+            //refund any excess storage if the user attached too much. Panic if they didn't attach enough to cover the required.
+            refund_deposit(storage_usage - initial_storage_usage);
+        }
+  }
 
-        //refund any excess storage if the user attached too much. Panic if they didn't attach enough to cover the required.
-        refund_deposit(required_storage_in_bytes);
+    #[payable]
+    pub fn nft_license_proposed_update(&mut self, token_id: TokenId, receiver_id: AccountId){
+       //measure the initial storage being used on the contract
+       let initial_storage_usage = env::storage_usage();
+
+    
+    //   let proposed_license = self.token_proposed_license_by_id.get(&token_id).unwrap();
+       let proposed_license = self.token_proposed_license_by_id.get(&token_id).unwrap();
+       //    let license = self.token_license_by_id.get(&token_id).unwrap();
+        self.token_license_by_id.remove(&token_id);
+        self.token_license_by_id.insert(&token_id, &proposed_license);
+        self.token_proposed_license_by_id.remove(&token_id);
+    
+        // Construct the mint log as per the events standard.
+        let nft_license_update_log: EventLog = EventLog {
+            // Standard name ("nep171").
+            standard: NFT_STANDARD_NAME.to_string(),
+            // Version of the standard ("nft-1.0.0").
+            version: NFT_METADATA_SPEC.to_string(),
+            // The data related with the event stored in a vector.
+            event: EventLogVariant::NftMint(vec![NftMintLog {
+                // Owner of the token.
+                owner_id: receiver_id.to_string(),
+                // Vector of token IDs that were minted.
+                token_ids: vec![token_id.to_string()],
+                // An optional memo to include.
+                memo: None,
+            }]),
+        };
+
+        // Log the serialized json.
+        env::log_str(&nft_license_update_log.to_string());
+
+        //calculate the required storage which was the used - initial
+        let storage_usage = env::storage_usage();
+        if storage_usage > initial_storage_usage {
+            //refund any excess storage if the user attached too much. Panic if they didn't attach enough to cover the required.
+            refund_deposit(storage_usage - initial_storage_usage);
+        }
+    }
+
+    #[payable]
+    pub fn nft_propose_license(&mut self, token_id: TokenId, proposed_license: TokenLicense, receiver_id: AccountId){
+       //measure the initial storage being used on the contract
+       let initial_storage_usage = env::storage_usage();
+
+       // TODO: check if receiver_id and  proposed_license.issuer_id are the same entity
+
+        self.token_proposed_license_by_id.remove(&token_id);
+        self.token_proposed_license_by_id.insert(&token_id, &proposed_license);
+
+        // Construct the mint log as per the events standard.
+        let nft_propose_license_log: EventLog = EventLog {
+            // Standard name ("nep171").
+            standard: NFT_STANDARD_NAME.to_string(),
+            // Version of the standard ("nft-1.0.0").
+            version: NFT_METADATA_SPEC.to_string(),
+            // The data related with the event stored in a vector.
+            event: EventLogVariant::NftMint(vec![NftMintLog {
+                // Owner of the token.
+                owner_id: receiver_id.to_string(),
+                // Vector of token IDs that were minted.
+                token_ids: vec![token_id.to_string()],
+                // An optional memo to include.
+                memo: None,
+            }]),
+        };
+
+        // Log the serialized json.
+        env::log_str(&nft_propose_license_log.to_string());
+
+        //calculate the required storage which was the used - initial
+        let storage_usage = env::storage_usage();
+        if storage_usage > initial_storage_usage {
+            //refund any excess storage if the user attached too much. Panic if they didn't attach enough to cover the required.
+            refund_deposit(storage_usage - initial_storage_usage);
+        }
     }
 }

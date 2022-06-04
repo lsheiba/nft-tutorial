@@ -200,12 +200,14 @@ impl NonFungibleTokenCore for Contract {
             //we'll get the metadata for that token
             let metadata = self.token_metadata_by_id.get(&token_id).unwrap();
             let license = self.token_license_by_id.get(&token_id).unwrap();
+        //    let proposed_license = self.token_proposed_license_by_id.get(&token_id).unwrap();
             //we return the JsonToken (wrapped by Some since we return an option)
             Some(JsonToken {
                 token_id,
                 owner_id: token.owner_id,
                 metadata,
                 license,
+            //    proposed_license,
                 approved_account_ids: token.approved_account_ids,
                 royalty: token.royalty,
             })
@@ -213,6 +215,7 @@ impl NonFungibleTokenCore for Contract {
             None
         }
     }
+    
 }
 
 #[near_bindgen]
