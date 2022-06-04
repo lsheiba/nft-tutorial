@@ -1,10 +1,10 @@
 {
-    "name": "nft-tutorial",
+    "name": "nft-license",
     "version": "1.0.0",
-    "description": "Zero to Hero NFT Tutorial",
-    "author": "Ben Kurrek",
-    "license": "ISC",
+    "description": "NFT License Token",
+    "author": "Leonard Sheibal",
+    "license": "MIT",
     "scripts": {
-        "build": "cd nft-contract && bash build.sh && cd .. && ls && cd market-contract && bash build.sh && cd .."
+        "build": "cd nft-contract && bash build.sh && cd .. && ls "
     }
 }
