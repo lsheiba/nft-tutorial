@@ -38,6 +38,20 @@ pub struct TokenMetadata {
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
+pub struct LicenseData {
+    pub i_agree: bool,
+    pub perpetuity: bool,
+    pub exclusivity: bool,
+    pub personal_use: bool,
+    pub commercial_use: bool,
+    pub limited_display_sublicensee: bool,
+    pub template: Option<String>,
+    pub pdf_url: Option<String>,
+}
+
+
+#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct TokenLicense {
     // pub test: u8,
     pub title: Option<String>, // ex. "Arch Nemesis: Mail Carrier" or "Parcel #5055"

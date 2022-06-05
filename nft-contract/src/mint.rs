@@ -78,12 +78,12 @@ impl Contract {
     }
 
     #[payable]
-    pub fn nft_update_license(&mut self, token_id: TokenId, license: TokenLicense, receiver_id: AccountId){
+    pub fn nft_update_license(&mut self, authorized_id: Option<String>, token_id: TokenId, license: TokenLicense, receiver_id: AccountId){
        //measure the initial storage being used on the contract
        let initial_storage_usage = env::storage_usage();
 
        // TODO: check if receiver_id and license.issuer_id are the same entity; if "YES" then update the license
-
+    
         self.token_license_by_id.remove(&token_id);
         self.token_license_by_id.insert(&token_id, &license);
     
@@ -94,7 +94,8 @@ impl Contract {
             // Version of the standard ("nft-1.0.0").
             version: NFT_LICENSE_SPEC.to_string(),
             // The data related with the event stored in a vector.
-            event: EventLogVariant::NftMint(vec![NftMintLog {
+            event: EventLogVariant::NftUpdateLicense(vec![NftUpdateLicenseLog {
+                authorized_id,
                 // Owner of the token.
                 owner_id: receiver_id.to_string(),
                 // Vector of token IDs that were minted.
@@ -116,7 +117,7 @@ impl Contract {
   }
 
     #[payable]
-    pub fn nft_accept_license(&mut self, token_id: TokenId, receiver_id: AccountId){
+    pub fn nft_approve_license(&mut self, authorized_id: Option<String>,token_id: TokenId, receiver_id: AccountId){
        //measure the initial storage being used on the contract
        let initial_storage_usage = env::storage_usage();
 
@@ -135,7 +136,8 @@ impl Contract {
             // Version of the standard ("nft-1.0.0").
             version: NFT_LICENSE_SPEC.to_string(),
             // The data related with the event stored in a vector.
-            event: EventLogVariant::NftMint(vec![NftMintLog {
+            event: EventLogVariant::NftApproveLicense(vec![NftApproveLicenseLog {
+                authorized_id,
                 // Owner of the token.
                 owner_id: receiver_id.to_string(),
                 // Vector of token IDs that were minted.
@@ -157,7 +159,7 @@ impl Contract {
     }
 
     #[payable]
-    pub fn nft_propose_license(&mut self, token_id: TokenId, proposed_license: TokenLicense, receiver_id: AccountId){
+    pub fn nft_propose_license(&mut self, authorized_id: Option<String>,token_id: TokenId, proposed_license: TokenLicense, receiver_id: AccountId){
        //measure the initial storage being used on the contract
     let initial_storage_usage = env::storage_usage();
 
@@ -178,7 +180,8 @@ impl Contract {
             // Version of the standard ("nft-1.0.0").
             version: NFT_LICENSE_SPEC.to_string(),
             // The data related with the event stored in a vector.
-            event: EventLogVariant::NftMint(vec![NftMintLog {
+            event: EventLogVariant::NftProposeLicense(vec![NftProposeLicenseLog {
+                authorized_id,
                 // Owner of the token.
                 owner_id: receiver_id.to_string(),
                 // Vector of token IDs that were minted.
