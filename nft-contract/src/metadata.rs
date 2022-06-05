@@ -113,7 +113,7 @@ pub struct JsonTokenLicense {
     //token metadata
     pub license: TokenLicense,
     // proposed license 
-    pub proposed_license: TokenLicense,
+    // pub proposed_license: TokenLicense,
     //list of approved account IDs that have access to transfer the token. This maps an account ID to an approval ID
 }
 

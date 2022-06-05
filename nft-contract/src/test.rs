@@ -7,8 +7,10 @@ mod tests {
     use crate::{Contract, Token, TokenMetadata, TokenLicense, LicenseData};
     use crate::approval::NonFungibleTokenCore;
     use crate::mint::*;
+    // use crate::license::*;
+
     use crate::nft_core::NonFungibleTokenCore as NFTCore;
-    
+ 
 
     const MINT_STORAGE_COST: u128 = 637000000000000000000000;
 
@@ -116,6 +118,21 @@ mod tests {
         let authorized_id = Some(test_accounts(0).to_string());
         contract.nft_update_license(authorized_id, token_id.clone(),sample_token_license(), test_accounts(0));
 
+        let authorized_id = test_accounts(0);
+        let token_id = "token-1".to_string();
+        let proposed_license  = sample_token_license();
+        
+        contract.internal_propose_license(&authorized_id, &token_id, &proposed_license);
+        let out = contract.nft_proposed_license(token_id);
+        println!("{}", serde_json::to_string(&out).unwrap());
+
+        let authorized_id = test_accounts(0);
+        let token_id = "token-1".to_string();
+        
+        contract.internal_update_license(&authorized_id, &token_id);
+        let out = contract.nft_license(token_id);
+        println!("{}", serde_json::to_string(&out).unwrap());
+
         // assert_eq!(token.token_id, token_id);
 
         assert!(true)
@@ -123,7 +140,7 @@ mod tests {
 /*   
 
     #[test]
-    fn test_new() {
+        fn test_new() {
         let mut context = get_context(accounts(1));
         testing_env!(context.build());
         let contract = Contract::new_default_meta(accounts(1).into());

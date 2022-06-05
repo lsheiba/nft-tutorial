@@ -73,24 +73,4 @@ impl Contract {
             //since we turned the keys into an iterator, we need to turn it back into a vector to return
             .collect()
     }
-        
-    //get the information for a specific token ID
-    pub fn nft_license(&self, token_id: TokenId) -> Option<JsonTokenLicense> {
-        //if there is some token ID in the tokens_by_id collection
-        if let Some(token) = self.tokens_by_id.get(&token_id) {
-            //we'll get the metadata for that token
-            let license = self.token_license_by_id.get(&token_id).unwrap();
-            let proposed_license = self.token_proposed_license_by_id.get(&token_id).unwrap();
-            //we return the JsonTokenLicense (wrapped by Some since we return an option)
-            Some(JsonTokenLicense {
-                token_id,
-                owner_id: token.owner_id,
-                license,
-                proposed_license,
-            })
-        } else { //if there wasn't a token ID in the tokens_by_id collection, we return None
-            None
-        }
-    }
-    
 }

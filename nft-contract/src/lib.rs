@@ -14,6 +14,7 @@ pub use crate::nft_core::*;
 pub use crate::approval::*;
 pub use crate::royalty::*;
 pub use crate::events::*;
+pub use crate::license::*;
 
 mod internal;
 mod approval; 
@@ -23,6 +24,7 @@ mod mint;
 mod nft_core; 
 mod royalty; 
 mod events;
+mod license;
 mod test;
 
 /// This spec can be treated like a version of the standard.
