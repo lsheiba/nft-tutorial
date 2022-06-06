@@ -40,7 +40,11 @@ impl NonFungibleTokenCore for Contract {
 
     //allow a specific account ID to approve a token on your behalf
     #[payable]
-    fn nft_approve(&mut self, token_id: TokenId, account_id: AccountId, msg: Option<String>) {
+    fn nft_approve(
+        &mut self, 
+        token_id: TokenId, 
+        account_id: AccountId, 
+        msg: Option<String>) {
         /*
             assert at least one yocto for security reasons - this will cause a redirect to the NEAR wallet.
             The user needs to attach enough to pay for storage on the contract

@@ -91,6 +91,7 @@ mod tests {
 
     #[test]
     fn test1() {
+        println!("==> test1");
         let mut context = get_context(test_accounts(0));
         testing_env!(context.build());
         let mut contract = Contract::new_default_meta(test_accounts(0).into());
@@ -137,6 +138,75 @@ mod tests {
 
         assert!(true)
     }
+
+    #[test]
+    fn test_mint() {
+        println!("==> test_mint");
+        let mut context = get_context(accounts(0));
+        testing_env!(context.build());
+        let mut contract = Contract::new_default_meta(accounts(0).into());
+
+        testing_env!(context
+        .storage_usage(env::storage_usage())
+        .attached_deposit(MINT_STORAGE_COST)
+        .predecessor_account_id(accounts(0))
+        .build());
+
+        let token_id = "token-1".to_string();
+        contract.nft_mint(
+            token_id.clone(),
+            sample_token_metadata(),
+            sample_token_license(),
+            accounts(0),
+            None,
+        );
+
+        let out = contract.nft_token(token_id);
+
+        println!("TokenJson: {}", serde_json::to_string(&out).unwrap());
+
+        assert!(true)
+
+    //    assert_eq!(token.token_id, token_id);
+    //    assert_eq!(token.owner_id, accounts(0));
+    //    assert_eq!(token.metadata, sample_token_metadata());
+    //    assert_eq!(token.approved_account_ids, HashMap::new());
+    }
+
+    #[test]
+    fn test_approve() {
+        println!("==> test_approve");
+        let mut context = get_context(accounts(0));
+        testing_env!(context.build());
+        let mut contract = Contract::new_default_meta(accounts(0).into());
+
+        testing_env!(context
+        .storage_usage(env::storage_usage())
+        .attached_deposit(MINT_STORAGE_COST)
+        .predecessor_account_id(accounts(0))
+        .build());
+        let token_id = "0".to_string();
+        contract.nft_mint(token_id.clone(), sample_token_metadata(), sample_token_license(), accounts(0), None);
+
+        // alice approves bob
+        testing_env!(context
+        .storage_usage(env::storage_usage())
+        .attached_deposit(150000000000000000000)
+        .predecessor_account_id(accounts(0))
+        .build());
+        contract.nft_approve(token_id.clone(), accounts(1), None);
+
+        testing_env!(context
+        .storage_usage(env::storage_usage())
+        .account_balance(env::account_balance())
+        .is_view(true)
+        .attached_deposit(0)
+        .build());
+        assert!(contract.nft_is_approved(
+            token_id.clone(), accounts(1), Some(0))
+        );
+    }
+
 /*   
 
     #[test]

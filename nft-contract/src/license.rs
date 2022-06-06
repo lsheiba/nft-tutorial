@@ -1,12 +1,22 @@
 use crate::*;
+
 use near_sdk::{ext_contract, Gas, PromiseResult, PromiseOrValue};
+
+const GAS_FOR_LICENSE_APPROVE: Gas = Gas(10_000_000_000_000);
+const NO_DEPOSIT: Balance = 0;
+const MIN_GAS_FOR_LICENSE_APPROVE_CALL: Gas = Gas(100_000_000_000_000);
+
 
 #[near_bindgen]
 impl Contract {
-
-
     #[payable]
-    pub fn nft_update_license(&mut self, authorized_id: Option<String>, token_id: TokenId, license: TokenLicense, receiver_id: AccountId){
+    pub fn nft_update_license(
+        &mut self, 
+        authorized_id: Option<String>, 
+        token_id: TokenId, 
+        license: TokenLicense, 
+        receiver_id: AccountId
+    ){
        //measure the initial storage being used on the contract
         let initial_storage_usage = env::storage_usage();
 
@@ -41,7 +51,7 @@ impl Contract {
             //refund any excess storage if the user attached too much. Panic if they didn't attach enough to cover the required.
             refund_deposit(storage_usage - initial_storage_usage);
         }
-  }
+    }
 
     #[payable]
     pub fn nft_approve_license(&mut self, authorized_id: Option<String>, token_id: TokenId, receiver_id: AccountId){
@@ -179,18 +189,63 @@ impl Contract {
         self.token_license_by_id.insert(&token_id, &license);
     }
 
-    /*
-    #[payable]
-    fn request_approval(&mut self, 
+ 
+    pub fn license_approval(
+        sender_id: AccountId, 
+        account_id: AccountId, 
+        token_id: TokenId,
+        approve: bool, 
+        deposit: Balance, 
+        gas_limit: Gas,
+    ) -> bool {
+        println!("==>license_authorization");
+        assert_one_yocto();
+
+        //get the GAS attached to the call
+        let attached_gas = env::prepaid_gas();
+
+        /*
+            make sure that the attached gas is greater than the minimum GAS for NFT approval call.
+            This is to ensure that the cross contract call to internal_update_license won't cause a prepaid GAS error.
+        */
+        assert!(
+            attached_gas >= MIN_GAS_FOR_LICENSE_APPROVE_CALL,
+            "You cannot attach less than {:?} Gas to nft_transfer_call",
+            MIN_GAS_FOR_LICENSE_APPROVE_CALL
+        );
+        
+        approve
+    }
+/*
+    pub fn request_approval(
+        &mut self, 
         account_id: AccountId, 
         token_id: TokenId, 
         receiver_id: AccountId, 
-        proposed_license: TokenLicense,
+        proposed_license: TokenLicense, 
         memo: Option<String>,
         msg: String,
-    ) -> PromiseOrValue<bool> {
+    ) -> Promise {
 
         println!("==>request_approval");
-        assert_one_yocto();
-    */
+
+        //get the sender ID 
+        let sender_id = env::predecessor_account_id();
+
+        self.internal_propose_license(&sender_id, &token_id, &proposed_license);
+
+        let mut authorized_id = Some(sender_id.to_string());
+
+        license_authorization(
+            sender_id, 
+            account_id, 
+            token_id.clone(),
+            true
+            NO_DEPOSIT,
+            env::prepaid_gas - GAS_FOR_LICENSE_APPROVAL,
+        )
+        .then(internal_update_license(&sender_id, &token_id)).into()
+
+    }
+*/
 }
